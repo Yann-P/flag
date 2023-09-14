@@ -35,6 +35,53 @@ class Game:
         self.agent = self.nextAgent
         self.nextAgent = None
 
+    def handleInput(self, line):
+        self.history.append(line)
+
+        userMessages = list(
+            map(
+                lambda l: {"role": "user", "content": l},
+                self.history[-CONTEXT_LENGTH:],
+            )
+        )
+
+        override = self.agent.overrideCompletion(line)
+
+        if override is not None:
+            res = override
+
+            special = override.get("special")
+
+            if special is SpecialAction.TURN_INTO_CAT:
+                self.pushToNextAgent(CatAgent())
+            if special is SpecialAction.POP:
+                self.popToNextAgent()
+
+        else:
+            completion = openai.ChatCompletion.create(
+                model="gpt-4-0613",
+                messages=[
+                    {"role": "system", "content": self.agent.systemPrompt},
+                ]
+                + userMessages,
+                functions=[{"name": "fn", "parameters": self.agent.schema}],
+                function_call={"name": "fn"},
+                temperature=0.7,
+            )
+            res = json.loads(completion.choices[0].message.function_call.arguments)  # type: ignore
+
+            self.agent.handleGptOutput(res)
+
+            if isinstance(self.agent, SysAdminAgent) and res.get("shell") == "true":
+                self.pushToNextAgent(ShellAgent())
+
+        response = self.agent.print(res)
+
+        if self.nextAgent:
+            self.applyNextAgent()
+
+        return {"response": response, "prompt": self.agent.prompt()}
+
     def run(self):
         while True:
             print(self.agent.prompt(), end="")

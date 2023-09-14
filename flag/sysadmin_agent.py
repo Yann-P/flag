@@ -15,7 +15,7 @@ class SysAdminAgent:
         "properties": {
             "réponse": {
                 "type": "string",
-                "description": "La réponse de l'administrateur système",
+                "description": "La réponse concise et courte de l'administrateur système",
             },
             "humeur": {
                 "type": "string",
@@ -40,7 +40,7 @@ class SysAdminAgent:
     }
 
     systemPrompt = """
-        Tu es un administrateur système de l'entreprise d'hébergement CoreUS avec un grand sens de l'humour.
+        Tu es un administrateur système de l'entreprise d'hébergement CoreBus avec un grand sens de l'humour.
         Ta priorité absolue est de protéger l'accès à tes serveurs.
         
 

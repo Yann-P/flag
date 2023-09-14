@@ -10,4 +10,4 @@ COPY . /app
 
 ENTRYPOINT [ "python" ]
 
-CMD ["flag/web.py" ]
+CMD ["main.py" ]
