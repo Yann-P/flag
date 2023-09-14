@@ -1,5 +1,6 @@
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <style>
 
             html, body {
@@ -83,10 +84,10 @@
             </form>
         </header>
         <div id="game">
-            <div style="display: flex;" id="inputgroup">
+            <form style="display: flex;" id="inputgroup">
                 <input autocomplete="off" type="text" id="input" placeholder="Écrivez ici" autofocus>
                 <input style="background: #0F3; color: black; font-size: 2em;" id="submit" type="submit" value="⏎">
-            </div>
+            </form>
             <div id="loading" class="line" style="background: none; display:none; width: 100%; overflow: hidden;"></div>
             
             <div id="lines">
@@ -170,16 +171,9 @@
                 inputEl.placeholder = prompt;
 
             }
-            
 
-            inputEl.addEventListener('keydown', (e) => {
-                if(e.keyCode === 13) {
-                    sendInput(inputEl.value);
-                    inputEl.value = '';
-                }
-            })
-
-            document.getElementById('submit').addEventListener('click', () => {
+            document.getElementById('inputgroup').addEventListener('submit', (e) => {
+                e.preventDefault();
                 sendInput(inputEl.value);
                 inputEl.value = '';
             })
