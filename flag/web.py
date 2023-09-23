@@ -7,6 +7,7 @@ from .game import Game
 from .sysadmin_agent import SysAdminAgent
 
 app = Flask(__name__)
+app.debug = True
 
 games = {}
 

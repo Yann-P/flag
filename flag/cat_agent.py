@@ -36,3 +36,7 @@ class CatAgent:
     @staticmethod
     def print(completion):
         return "🐱 " + (completion.get("réponse") or "") + "\n"
+
+    @staticmethod
+    def completion_to_history(completion):
+        return completion.get("réponse")

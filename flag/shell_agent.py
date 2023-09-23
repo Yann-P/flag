@@ -47,4 +47,8 @@ class ShellAgent:
             completion["response"]
             + "\n"
             + ("(" + completion["statusCode"] + ")" + "\n")
-        )
+        )   
+
+    @staticmethod
+    def completion_to_history(completion):
+        return completion.get("response")

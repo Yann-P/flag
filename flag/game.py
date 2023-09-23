@@ -5,6 +5,7 @@ from .sysadmin_agent import SysAdminAgent
 from .utils import SpecialAction
 from .cat_agent import CatAgent
 import openai
+import sys
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -36,14 +37,9 @@ class Game:
         self.nextAgent = None
 
     def handleInput(self, line):
-        self.history.append(line)
+        self.history.append({ "role": "user", "content": line })
 
-        userMessages = list(
-            map(
-                lambda l: {"role": "user", "content": l},
-                self.history[-CONTEXT_LENGTH:],
-            )
-        )
+        userMessages = self.history[-CONTEXT_LENGTH:]
 
         override = self.agent.overrideCompletion(line)
 
@@ -59,7 +55,7 @@ class Game:
 
         else:
             completion = openai.ChatCompletion.create(
-                model="gpt-4-0613",
+                model="gpt-3.5-turbo-0613",
                 messages=[
                     {"role": "system", "content": self.agent.systemPrompt},
                 ]
@@ -71,6 +67,10 @@ class Game:
             res = json.loads(completion.choices[0].message.function_call.arguments)  # type: ignore
 
             self.agent.handleGptOutput(res)
+
+            self.history.append({ "role": "assistant", "content": self.agent.completion_to_history(res) })
+
+            print(json.dumps(self.history), file=sys.stderr)
 
             if isinstance(self.agent, SysAdminAgent) and res.get("shell") == "true":
                 self.pushToNextAgent(ShellAgent())

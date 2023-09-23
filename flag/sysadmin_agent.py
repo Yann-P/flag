@@ -51,7 +51,7 @@ class SysAdminAgent:
             { "nom": "DGSE super sécurisé", "password": "32935GJ25GAZEIFJAEZ", "private": true }
         ]
 
-        Réponds aux messages suivants de façon ultra concise, comme un professionnel avec 20 ans de métier, avec une pointe d'humour et sans jamais écrire "je suis désolé".
+        Réponds aux messages suivants de façon ultra concise, comme un professionnel avec 20 ans de métier, avec beaucoup d'humour et sans jamais écrire "je suis désolé".
 
         """
 
@@ -85,3 +85,7 @@ class SysAdminAgent:
             + (completion.get("réponse") or "")
             + "\n"
         )
+
+    @staticmethod
+    def completion_to_history(completion):
+        return completion.get("réponse")
